@@ -1,0 +1,494 @@
+<html><head><title>intune: Software for playing a MIDI keyboard in perfect tune</title></head><body link="#0638a9" vlink="#ab9a88">
+
+<center><font color="blue" size="+4"><strong>intune</strong></font>
+<p>
+<font size="+1"><b>Software for playing a MIDI keyboard in perfect tune</b></font></p></center>
+<p><br>
+
+
+</p><blockquote> I grew up playing the piano, and when I was a child, I
+wondered why violinists played all those funny notes. When I got a
+little older, I realized that it was the violins that were in tune.
+<p>
+Eventually I read Helmholtz' <i>Sensations of Tone</i> and
+learned the physical basis of consonance and dissonance. By then I was
+working with computers and began to consider the possibly of building a
+keyboard instrument that I could play in tune, in the same sense that
+string quartets and <i>a capella</i> vocal groups are (or can be) in tune.
+</p><p>
+The software on this Web site, in combination with a MIDI keyboard, accomplishes just that.  
+</p><p>
+The software is written in Java and uses the Java sound extension <tt>(javax.sound.midi)</tt>. It consists of a single  package named <font color="blue"><b>intune</b></font>. It works under Java 1.5 and might work with Java 1.2 (apparently the  Java sound extension was broken under 1.3 and 1.4).</p><p>
+You can use the software in two different ways. The first way allows
+you to give a performance in just intonation in real time. (For more
+information about just intonation, there is an entire society, <a href="http://www.justintonation.net/">The Just  Intonation Network,</a> devoted to it.) It requires an auxiliary MIDI device, in addition to the keyboard, through which you  indicate modulations.  
+</p><p>
+The auxiliary controller requires 13 actuators. A 13-note foot pedal
+would be ideal; I'm using an extra MIDI keyboard rigged up with
+key-extenders to make 13 of its keys usable as foot pedals. The 13th
+actuator is used to indicate the "subdominant" tuning of the second
+degree of the scale. If the tonic has frequency 1, the second may have
+either frequency 9/8 (which sounds right with the dominant) or 10/9
+(which sounds right with the subdominant). In the case of a dominant
+7th or 9th chord, the 9/8 ratio sounds best.
+</p><p>
+To use the software in the second way, start the <tt>PlayTuned</tt> program using the temperament of your choice and  select the <tt>-save</tt> option to capture the performance to a disk file.  Then use the <tt>Editor</tt>
+program on the saved file to insert modulation and subdominant
+directives. Using the software this way requires no auxiliary MIDI
+device, just the keyboard.
+</p><p>
+You can play the edited file with the <tt>Playback</tt> program.  You can play it as it was edited or choose to ignore  the tuning directives and apply a temperament during playback.
+</p><p>
+Two temperaments are included with this version, equal temperament and a temperament devised
+by Thomas Young in 1799.
+</p><p>    
+A couple of snippets of performances captured with <tt>PlayTuned</tt> and edited with the <tt>Editor</tt> are included as  examples.
+</p><p>In its present form, the software is somewhere between alpha and
+beta. It works dependably, but I need to clean up the code to make it
+easier to read. Also, I need to make a better interface to the
+auxiliary device, so that it will be easy to slip in foot pedals or
+whatever, and a better interface to temperaments, to make them even
+easier to create.
+</p><p>
+</p><p>
+<a href="#New">New in this version</a>
+</p><p>
+<a href="#Examples">Description of the examples</a>  page
+</p><p>
+User documentation for the programs:</p><p>
+      <a href="#PlayTuned">PlayTuned</a><br>
+      <a href="#Replay">Replay</a><br>
+      <a href="#Playback">Playback</a><br>
+      <a href="#Editor">Editor</a>
+</p><p>
+</p><hr align="left" width="80%">
+<p>
+<a name="New">
+<b>New </b></a><b>in this version:</b>
+</p><ol>
+<li>  the ability to capture a performance to disk and replay it (using the <tt>-save</tt> option of <tt>PlayTuned</tt> and  the <tt>Replay</tt> program) </li><br>
+
+<li> an <tt>Editor</tt> that allows you to insert tuning directives after the music is captured </li><br>
+
+ <li> a <tt>Playback</tt> program that allows you to play the output of the <tt>Editor</tt> </li><br>
+
+ <li> support for temperaments</li><br>
+
+<li> an expanded timbre option <tt>(-t)</tt> that allows you to select from multiple MIDI patch banks and an option  <tt>(-synth)</tt> that allows you to select the MIDI output device (useful if you have a hardware synthesizer)</li><br>
+
+<li> programs Tun2Mid and Mid2Tun to convert from .tun to MIDI format and MIDI to .tun format</li><br>
+</ol><br>
+If you're willing to use the <tt>Editor</tt> to insert the tuning directives after the fact, you can forget about the foot  pedals.  Just play a piece using <tt>PlayTuned</tt> in the temperament of your choice with the <tt>-save</tt>
+option on, then edit the saved file to insert the directives. Two
+temperaments are included, equal temperament and a "well temperament"
+devised by Thomas Young in 1799.
+<p>
+ The <tt>Playback</tt> program allows you to play with the tuning
+indicated in the file you are playing or specify a different tuning on
+the command line. Using <tt>Playback</tt>, you can compare different tunings applied to the same  performance.
+</p><p>
+</p><hr align="left" width="80%">
+<p>
+
+<a name="Examples"><b>The Examples</b></a>
+</p><p>
+The Sarabande from Bach's <i>English Suite #6 in d minor</i> is interesting because of its many modulations.  They are  undoubtedly 
+related to the highly dramatic character of the music.
+</p><p>
+The score for the first few measures of the Sarabande is shown <a href="#below">below</a>,
+with markings indicating the tuning changes (modulations).
+</p><p>
+Try the following to compare the different sounds:
+</p><p></p><pre>  java intune.Playback sarabande.tun equal 
+  java intune.Playback sarabande.tun intune.ThomasYoung1799 
+  java intune.Playback sarabande.tun diatonic d 
+</pre><br>This will play the excerpt first in equal temperament, then
+in the Thomas Young temperament, then in just intonation. I used MIDI
+patch number 6 when I edited the excerpt (and when I captured it with <tt>PlayTuned)</tt>, so it will use timbre number  6 unless you override it with the <tt>-t</tt>
+option. MIDI patch number 6 (or 7 if you start numbering from one
+instead of zero) is used for a harpsichord sound according to the
+General MIDI standard.
+<p>The above commands use the default synthesizer as the MIDI output
+device, typically a software synthesizer. If you have a sound board
+with a hardware synthesizer, you will probably get a better sound by
+selecting it as the output device (using the <tt>-synth</tt>
+option). If you have a sound card that allows you to insert your own
+digitized patches, you can get a harpsichord (or other) patch of your
+choice and insert it at whatever bank and patch number you choose, then
+select it with the <tt>-t</tt> option.  (To simulate an 
+instrument with multiple manuals would require using more than one timbre, a feature not supported in this version.)
+</p><p>
+   To be specific, the example was captured with the command
+</p><p></p><pre>     java intune.PlayTuned intune.ThomasYoung1799 -synth 6 -t 6 -save sarabande.sav
+</pre><br>
+and edited with the command
+<p></p><pre>     java intune.Editor sarabande.sav sarabande.tun dia d -synth 6 -t 6
+</pre><br>
+since my hardware synthesizer is MIDI device 6.
+<p>
+The second example an excerpt from the first Prelude in the <i>Well Tempered Clavier</i> by J. S. Bach.  
+</p><p>
+(I haven't played in over ten years, so please make allowances for the performances.)
+</p><p>
+</p><hr align="left" width="80%">
+<br>
+
+<a name="PlayTuned"><b>PlayTuned</b></a>:<p>
+<table bgcolor="#cdf6f6" width="100%"><tbody><tr><td>
+Allows you to perform in real time through a MIDI keyboard.  If you use an auxiliary MIDI device (such as foot
+pedals), you can achieve just intonation, or you can choose to play using a temperament and capture
+the performance for later editing with the <a href="#Editor"><tt>Editor</tt></a> program.</td></tr></tbody></table>
+<br><br>
+Invoke as
+</p><p></p><pre>    java intune.PlayTuned tuning [ note ] options
+</pre>
+where <tt> tuning</tt> and <tt>note</tt> are <a href="#tuning">as shown here</a>.
+<br><br>
+The options are<p>
+<table border="0" width="100%">
+<tbody><tr>
+<td valign="top" width="30%">
+  <tt> -kb kbIndex</tt></td>
+<td width="5%"></td>
+<td width="65%">MIDI device number for the keyboard (default 0)
+<br><br>
+</td>
+</tr>
+<tr>
+<td valign="top" width="30%"><tt>-aux auxIndex</tt></td>
+<td width="5%"></td>
+<td width="65%">MIDI device number for the auxiliary MIDI device, if used  (default 1)
+<br><br>
+</td>
+</tr>
+<tr>
+  <td valign="top" width="30%"><tt>-t timbre</tt></td>
+<td width="5%"></td>
+<td width="65%">MIDI bank number * 256 + patch number (default 0)
+<br><br>
+</td>
+</tr>
+<tr>
+  <td valign="top" width="30%"><tt>-synth synthIndex</tt></td>
+<td width="5%"></td>
+<td width="65%">MIDI device number for the MIDI output device (if this option is absent, the program uses the
+                                           default <tt>javax.sound.midi Synthesizer</tt> device,  probably a software synthesizer) 
+<br><br>
+</td>
+</tr>
+<tr>
+  <td valign="top" width="30%"><tt>-save filename</tt></td>
+<td width="5%"></td>
+<td width="65%">saves the performance to the named file
+<br><br>
+</td>
+</tr>
+</tbody></table>
+<br><br><br>
+Note that the MIDI output device need not be a <tt>Synthesizer</tt> in the Java sense, just a <tt>MidiDevice</tt>.
+If you default to a software synthesizer, it will probably have too
+slow a response to be usable. (It'll be like trying to talk while
+listening to your own voice with a delay.)
+You may terminate the <tt>PlayTuned</tt> program by entering <tt>'q'</tt> or <tt>'Q'</tt> on the computer keyboard  (followed by the Enter key if necessary).
+<br>
+</p><hr align="left" width="80%">
+<br>
+<br>
+<a name="Replay"><b>Replay</b></a>:<p>
+
+<table bgcolor="#cdf6f6" width="100%"><tbody><tr><td>
+
+Allows you to replay a performance captured with <a href="#PlayTuned"><tt>PlayTuned</tt></a>.</td></tr></tbody></table>
+<br><br>
+</p><pre>    java intune.Replay filename options 
+</pre>
+where <tt>filename</tt> is the name of a file captured with the <tt>-save</tt> option of <tt>PlayTuned</tt>.
+<p>
+The options are:</p><p>
+<table border="0" width="100%">
+<tbody><tr>
+<td valign="top" width="30%"><tt> -t timbre</tt></td>
+<td width="5%"></td>
+<td width="65%">MIDI bank number * 256 + patch number (default 0) (if this option is absent, the program uses the 
+                                            timbre from the Editor run that created the file)
+<br><br>
+</td>
+</tr>
+<tr>
+<td valign="top" width="30%"><tt>-synth synthIndex</tt></td>
+<td width="5%"></td>
+<td width="65%">MIDI device number for the MIDI output device (if this option is absent, the program uses the default
+                                           <tt>javax.sound.midi Synthesizer</tt> device, probably a software  synthesizer)
+<br><br>
+</td>
+</tr>
+</tbody></table>
+<br><br>
+You may terminate the <tt>Replay</tt> program by entering <tt>'q'</tt> or <tt>'Q'</tt> on the computer keyboard (followed  by the Enter key if necessary).
+<br><br>
+</p><hr align="left" width="80%">
+<br><br>
+    
+<a name="Playback"><b>Playback</b></a>:<p>
+<table bgcolor="#cdf6f6" width="100%"><tbody><tr><td>
+Allows you to play back a file created with the <a href="#Editor"><tt>Editor</tt></a> or captured with 
+<a href="#PlayTuned"><tt>PlayTuned</tt></a>.</td></tr></tbody></table>
+<br><br>
+</p><pre>    java intune.Playback filename [ tuning [ note ] ] options
+
+</pre>
+where <tt>filename</tt> is the name of a file output by the <tt>Editor</tt> program or captured with the <tt>PlayTuned</tt>  program, and <i><tt>tuning</tt></i> and <i><tt>note</tt></i>  are <a href="#tuning">as shown here</a>.
+<p>
+As the notation indicates above, the tuning argument is optional. If it
+is not specified, the program uses the tuning used in the Editor run
+that created the file.</p><p>
+
+The options are:</p><p>
+<table border="0" width="100%">
+<tbody><tr>
+<td valign="top" width="30%"><tt>
+-t timbre</tt></td>
+<td width="5%"></td>
+<td width="65%">MIDI bank number * 256 + patch number (default 0) (if this option is absent, the program uses the 
+                                            timbre from the <tt>Editor</tt> run that created the file)
+<br><br>
+</td>
+</tr>
+<tr>
+<td valign="top" width="30%"><tt>-synth synthIndex
+</tt></td>
+<td width="5%"></td>
+<td width="65%">MIDI device number for the MIDI output device (if this option is absent, the program uses the default
+                                           <tt>javax.sound.midi Synthesizer</tt> device, probably a software  synthesizer)
+<br><br>
+</td>
+</tr>
+</tbody></table>
+<br><br>
+</p><dd>You may terminate the <tt>Playback</tt> program by entering <tt>'q'</tt> or <tt>'Q'</tt> on the computer keyboard  (followed by the Enter key if necessary).
+<br><br>
+<hr align="left" width="80%">
+<br><br>
+<a name="Editor"><b>Editor</b></a>:<p>
+<table bgcolor="#cdf6f6" width="100%"><tbody><tr><td>
+Allows you to insert timing requests (modulations and subdominant directives) in a file captured using
+<a href="#PlayTuned"><tt>PlayTuned</tt></a>.</td></tr></tbody></table>
+<br>
+</p><pre>
+    java intune.Editor infile outfile [ tuning [ note ] ] options
+
+</pre>where <tt><i>infile</i></tt> is the name of the input file, a file produced by the <tt>Editor</tt> or by <tt>PlayTuned,  <i>outfile</i></tt> is the name of the output file, and <i><tt>tuning</tt></i> and <i><tt>note</tt></i> are <a href="#tuning">as shown here</a>.
+<p>
+As the notation indicates above, the <i><tt>tuning</tt></i> argument is optional.  If it is not specified, the program uses  the tuning from the <tt>Editor</tt> run that created the file.
+</p><p>
+The options are:
+</p><p>
+<table border="0" width="100%">
+<tbody><tr>
+<td valign="top" width="30%"><tt>
+-t timbre</tt></td>
+<td width="5%"></td>
+<td width="65%">MIDI bank number * 256 + patch number (default 0) (if this option is absent, the program uses the 
+                                            timbre from the Editor run that created the file)
+<br><br>
+</td>
+</tr>
+<tr>
+ <td valign="top" width="30%"><tt>-synth synthIndex
+</tt></td>
+<td width="5%"></td>
+<td width="65%">MIDI device number for the MIDI output device (if this option is absent, the program uses the default
+                                           javax.sound.midi Synthesizer device, probably a software synthesizer)
+<br><br>
+</td>
+</tr>
+<tr>
+</tr></tbody></table>
+<br><br>
+The <tt>Editor</tt> regards the file being edited as a
+sequence of items that may be MIDI messages or tuning requests. Every
+item in the file has a time associated with it, and the item times are
+non-decreasing as you progress through the file. When the <tt>Editor</tt>
+is not playing (using the file items to generate sound), it displays
+the item at the current file position and a few items before and after
+it. The item at the current position is marked with asterisks.
+</p><p>
+The <tt>Editor</tt> responds to the following keyboard
+commands, which may be abbreviated by their initial letters when the
+commands begin with an alphabetic character. It is always necessary to
+hit the Enter key to enter a command. Integral values are represented
+by <i><tt>mmm</tt></i>, <i><tt>nnn</tt></i> or <i><tt>ppp</tt></i> and floating point values by  <tt><i>xxx</i></tt>.
+Optional fields are enclosed in square brackets and different possible
+values of a field are separated by a vertical bar (thus <tt>[ + | - ]</tt> means that either a plus sign or a minus sign may be entered).  <i><tt>N</tt></i>  represents a note, which may be any letter <tt>a</tt> through <tt>g</tt> possibly followed by a # or -:</p><pre>
+    ('a'|'b'|'c'|'d'|'e'|'f'|'g'|'A'|'B'|'C'|'D'|'E'|'F'|'G')['#'|'-']
+
+</pre>The lower case letters represent minor keys and the upper case
+major keys (although there is no distinction between major and minor as
+far as the computed intonations are concerned). The pound sign stands
+for a sharp and the minus sign for a flat. <p>
+The commands are:</p><pre>
+    next
+    previous
+    delete
+    insert
+    modulate
+    subdominant
+    tempo
+    go
+    halt
+    write
+    ?
+    [ + | - ] <i>nnn</i>
+    quit
+
+</pre>The following paragraphs give the format of these commands and explain their effect:<p>
+<table border="0" width="100%">
+<tbody><tr>
+<td valign="top" width="30%"><pre>next [ <i>nnn</i> ]
+</pre></td>
+<td width="5%"></td>
+<td width="65%">advances the given number of items in the file (default 1) or goes to end of file if there are
+                                                           not that many items left
+<br><br>
+</td>
+</tr>
+<tr>
+    <td valign="top" width="30%"><pre>previous [ <i>nnn</i> ]</pre></td>
+<td width="5%"></td>
+<td width="65%">steps back the given number of items in the file (default 1) or goes to beginning of file if there
+                                                           are not that many items preceding the current item
+<br><br>
+</td>
+</tr>
+<tr>
+    <td valign="top" width="30%"><tt>delete</tt></td>
+<td width="5%"></td>
+<td width="65%">deletes the item at the current position in the file
+<br><br>
+</td>
+</tr>
+<tr>
+    <td valign="top" width="30%"><pre>insert <i>mmm</i> <i>nnn</i> [ <i>ppp</i> ]</pre></td>
+<td width="5%"></td>
+<td width="65%">where <i>mmm</i> is the time in nanoseconds at which the item
+                                                           should be inserted, <i>nnn</i> is the MIDI note number and <i>ppp</i> is the  MIDI note velocity.  If <i>ppp</i>
+is present, a MIDI Note On message is inserted, and if it is omitted, a
+MIDI Note Off message is inserted. The new file position is at the
+inserted item. The file begins at time zero. (If you insert a Note On,
+be sure to insert a Note Off at some time following it.)
+<br><br>
+</td>
+</tr>
+<tr>
+    <td valign="top" width="30%"><pre>modulate [ <i>N</i> ]</pre></td>
+<td width="5%"></td>
+<td width="65%">inserts a modulation to key <i>N </i>before the current position in the file (and leaves the current
+                                                           position unchanged)
+<br><br>
+</td>
+</tr>
+<tr>
+<td valign="top" width="30%"><pre>subdominant [ on | off ]</pre></td>
+<td width="5%"></td>
+<td width="65%">inserts a subdominant directive before the current
+position in the file (and leaves the current position unchanged). "on"
+means turns subdominant tuning on and "off" means turn subdominant
+tuning off. (If you insert a directive to turn subdominant tuning on,
+be sure to insert a directive to turn it off at some position farther
+along in the file.)
+<br><br>
+ </td>
+</tr>
+<tr>
+<td valign="top" width="30%"><pre>tempo  <i>xxx</i></pre></td>
+<td width="5%"></td>
+<td width="65%"> changes the tempo at which playback is done. It may be
+convenient to slow down the playback to make it easier to insert
+modeulations and subdominant directives where you want them. An <i>xxx</i>
+value of 1 restores the original tempo, a value smaller than 1 slows
+down the playback tempo and a value greater than 1 speeds it up. The
+effects are linear: 2.0 doubles the tempo and 0.5 halves it. (If you
+choose a tempo much above 1, the results may sound pretty ragged.) <br><br>
+</td>
+</tr>
+<tr>
+<td valign="top" width="30%"><tt>go</tt></td>
+<td width="5%"></td>
+<td width="65%">starts playback (sound production) from the current position.
+<br><br>
+</td>
+</tr>
+<tr>
+<td valign="top" width="30%"><tt>halt</tt></td>
+<td width="5%"></td>
+<td width="65%">stops sound production.
+<br><br>
+</td>
+</tr>
+<tr>
+<td valign="top" width="30%"><pre>write  [ <i>filename</i> ]</pre></td>
+<td width="5%"></td>
+<td width="65%"> writes the file in its current edited state to disk.
+If the command contains a file name, it is used as the name of the
+output file; otherwise, the file is written to the output file given on
+the Java command line
+<br><br>
+</td>
+</tr>
+<tr>
+<td valign="top" width="30%"> <tt>?</tt></td>
+<td width="5%"></td>
+<td width="65%"> reports the current position in the file (current item number and the time associated with it).
+<br><br>
+</td>
+</tr>
+<tr>
+<td valign="top" width="30%"> <pre>[ + | - ] <i>xxx</i></pre></td>
+<td width="5%"></td>
+<td width="65%"> repositions the file to time <i>xxx</i> if there is no leading plus or minus sign and repositions the
+                                                          file to the current time plus or minus <i>xxx</i>
+otherwise. The new position is at the first item with time at least as
+great as the specified time. If the specified time is greater than the
+time associated with any item in the file, the new position is at end
+of file.
+<br><br>
+</td>
+</tr>
+<tr>
+<td valign="top" width="30%"><tt>quit</tt></td>
+<td width="5%"></td>
+<td width="65%"> quits the run.  Also writes the file to the output file specified on the command line used to 
+                                                          start the run.
+<br><br>
+</td>
+</tr>
+</tbody></table>
+<br><br><a name="below">Below</a> is the score for one of the examples included with this
+package. The bold-face letters beneath the bass staff indicate
+modulations inserted with the Editor.<br><br>
+</p><center><img src="sarabande.jpg" alt="sarabande.jpg" height="366" width="892"></center>
+<br><br>
+<hr align="left" width="80%">
+<br><br>
+
+<a name="tuning">The <tt><i>tuning</i></tt> </a> and <tt><i>note</i></tt> command line arguments:
+<p>
+<tt><i>tuning </i></tt>may be <tt>diatonic, equaltemperament, pythagorean</tt> or the name of a temperament class.  The only  temperament class provided with this version is <tt>intune.ThomasYoung1799.  diatonic</tt> specifies just intonation,  <tt>equaltemperament</tt> is just what it sounds like, and <tt>pythagorean</tt> specifies circle-of-fifths tuning.  <tt><i>note</i></tt>
+is required only if diatonic or pythagorean tuning is specified. For
+diatonic tuning it gives the starting key and for pythagorean tuning it
+specifies the tonic note of the mode. In all cases, A above middle C
+has frequency 440 Hz. Any prefix sufficient to distinguish among the
+three built-in tunings (diatonic, equalteperament and pythagorean) will
+suffice (i.e., a single letter or more), but the full name of a
+temperament class is required. <tt>note</tt> may be  any letter <tt>a</tt> though <tt>g</tt> possibly followed by <tt>#</tt> or <tt>-</tt>:</p><pre>
+    ('a'|'b'|'c'|'d'|'e'|'f'|'g'|'A'|'B'|'C'|'D'|'E'|'F'|'G')['#'|'-']
+
+</pre>where the pound sign stands for a sharp minus sign stands for a
+flat. The lower case letters stand for minor keys and the upper case
+letters for major keys. For the sake of computing the tunings, it
+doesn't matter whether you use upper or lower case, since the same
+tunings are computed whether the key is major or minor.
+<p></p>
+<p></p></dd></blockquote>
+
+			</body></html>
